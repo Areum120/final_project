@@ -5,11 +5,29 @@ print(df.shape)
 # print(df)
 
 def calculate_accessibility(x):
+    # print(x)
     q1_sum = 0
-    if x['Q1A1'] == 1:
+    if (x['Q1A1'] == 1) or (x['Q1A2'] == 1) or (x['Q1A1'] == 1 & x['Q1A2'] == 1) :
         q1_sum += 100
-    q2_sum = x['Q2A11'] + x['Q2A12']
-    q3 = x['Q3']
+    q2_sum = 0
+    if x['Q2A11'] == 1:
+        q2_sum += 50
+    elif (x['Q2A11'] == 2) or (x['Q2A12'] == 2):
+        q2_sum += 10
+    elif x['Q2A11'] == 2 & x['Q2A12'] == 2:
+        q2_sum += 20
+
+    # print(q1_sum, q2_sum)
+    if (x['Q2A2'] == 1) & (x['Q2A3'] == 1):
+        q2_sum += 40
+    elif (x['Q2A2'] == 1) or (x['Q2A3'] == 1):
+        q2_sum += 20
+
+    # print(q1_sum, q2_sum)
+    q3 = 0
+    if x['Q3'] == 1:
+        q3 += 100
+
     return q1_sum + q2_sum + q3
 
 # 문1) Q1A1 1:있다 100 2:없다 0 / Q1A2 1:있다 100 2:없다 0 / Q1A1, Q1A2 1,1: 둘 다 있다 100
@@ -37,4 +55,13 @@ df['accessibility'] = df.apply(lambda x: calculate_accessibility(x), axis=1)
 
 print(df['accessibility'])
 
-
+# test
+# x = {}
+# x['Q1A1'] = 1
+# x['Q1A2'] = 1
+# x['Q2A11'] = 1
+# x['Q2A12'] = 0
+# x['Q2A2'] = 1
+# x['Q2A3'] = 1
+# x['Q3'] = 1
+# print(calculate_accessibility(x))
