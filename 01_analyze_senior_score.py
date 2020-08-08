@@ -6,7 +6,6 @@ print(df.shape)
 
 #접근
 def calculate_accessibility(x):
-    # print(x)
     q1_sum = 0
     if (x['Q1A1'] == 1) or (x['Q1A2'] == 1) or (x['Q1A1'] == 1 & x['Q1A2'] == 1) :
         q1_sum += 100
@@ -135,14 +134,16 @@ def calculate_utiliz(x):
 #접근, 역량, 활용
 #astype(int)를 해줘야 float 오류 방지
 df['Q2A12'] = df['Q2A12'].fillna(0).astype(int)
-df['Q2A12'] = df['Q2A12'].fillna(0).astype(int)
+df.iloc[:, 31:80] = df.iloc[:, 31:81].fillna(0).astype(int)
+
 
 df['competency'] = df.apply(lambda x: calculate_competency(x), axis=1)
 df['accessibility'] = df.apply(lambda x: calculate_accessibility(x), axis=1)
 df['utiliz'] = df.apply(lambda x: calculate_utiliz(x), axis=1)
-
+#
 print(df['utiliz'])
 
+# df.to_csv('result.csv')
 # test
 # x = {}
 # x['Q1A1'] = 1
