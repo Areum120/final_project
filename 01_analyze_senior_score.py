@@ -5,10 +5,12 @@ print(df.shape)
 # print(df)
 
 def calculate_accessibility(x):
-    q1_sum = sum([ x['Q1A{}'.format(i)] for i in range(1, 2)])
-    q2_sum = sum([ x['Q2A{}'.format(i)] for i in range(1, 2 + 1)])
+    q1_sum = 0
+    if x['Q1A1'] == 1:
+        q1_sum += 100
+    q2_sum = x['Q2A11'] + x['Q2A12']
     q3 = x['Q3']
-    return
+    return q1_sum + q2_sum + q3
 
 # 문1) Q1A1 1:있다 100 2:없다 0 / Q1A2 1:있다 100 2:없다 0 / Q1A1, Q1A2 1,1: 둘 다 있다 100
 # (컴퓨터 or 노트북 2중의 1개만 있음 100점)
@@ -29,7 +31,10 @@ def calculate_competency(x):
 # df0.apply(lambda x: calculate_accessibility(x))
 
 #접근, 역량, 활용
-
+df['Q2A12'] = df['Q2A12'].fillna(0)
 df['competency'] = df.apply(lambda x: calculate_competency(x), axis=1)
+df['accessibility'] = df.apply(lambda x: calculate_accessibility(x), axis=1)
+
+print(df['accessibility'])
 
 
