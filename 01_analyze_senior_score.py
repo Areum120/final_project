@@ -12,7 +12,9 @@ def calculate_accessibility(x):
     q2_sum = 0
     if x['Q2A11'] == 1:
         q2_sum += 50
-    elif (x['Q2A11'] == 2) or (x['Q2A12'] == 2):
+    elif x['Q2A11'] == 2:
+        q2_sum += 10
+    elif x['Q2A12'] == 2:
         q2_sum += 10
     elif x['Q2A11'] == 2 & x['Q2A12'] == 2:
         q2_sum += 20
@@ -49,7 +51,7 @@ def calculate_competency(x):
 # df0.apply(lambda x: calculate_accessibility(x))
 
 #접근, 역량, 활용
-df['Q2A12'] = df['Q2A12'].fillna(0)
+df['Q2A12'] = df['Q2A12'].fillna(0).astype(int)
 df['competency'] = df.apply(lambda x: calculate_competency(x), axis=1)
 df['accessibility'] = df.apply(lambda x: calculate_accessibility(x), axis=1)
 
