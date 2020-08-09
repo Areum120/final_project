@@ -39,6 +39,8 @@ def calculate_accessibility(x):
 # Q2A3 1:스마트주변기기 있다 20 / 2: 없다 0
 # (스마트폰은 50점 피쳐폰은 10점, 스마트패드 20점, 스마트주변기기 20점 스마트폰 비중을 가장 높게 넣고 각 기기별 차등점수 부여)
 # 문3) Q3 1:이용할 수 있다 100 / 2:이용할 수 없으면 0
+# 만점 시 100+ 50 + 10 + 20 + 20 + 100 = 300점
+
 
 #역량
 def calculate_competency(x):
@@ -117,7 +119,7 @@ def calculate_utiliz(x):
     '''
     return total
 
-
+#활용 세부 점수 분류
 # 유선 및 모바일 인터넷 이용여부(0.4)
 # 문제 8A + 8B
 # 문제 9A + 9B
@@ -131,19 +133,25 @@ def calculate_utiliz(x):
 # 문제 13A + 13B
 # 문제 14A + 14B
 
+
 #접근, 역량, 활용
 #astype(int)를 해줘야 float 오류 방지
 df['Q2A12'] = df['Q2A12'].fillna(0).astype(int)
 df.iloc[:, 31:80] = df.iloc[:, 31:81].fillna(0).astype(int)
 
-
+#각 데이터 프레임에 계산식을 한줄 씩 전부 적용 #axis 기본값 0-> row에 적용 1로 하면 colomn으로 적용
 df['competency'] = df.apply(lambda x: calculate_competency(x), axis=1)
 df['accessibility'] = df.apply(lambda x: calculate_accessibility(x), axis=1)
 df['utiliz'] = df.apply(lambda x: calculate_utiliz(x), axis=1)
-#
-print(df['utiliz'])
 
-# df.to_csv('result.csv')
+#각 100점씩 총 300점 환산하였음 총 점수
+#접근 *0.2 = 20, 역량 *0.4 = 40, 활용 *0.4 = 40
+#총 더하기 100
+df['digital_sum'] = df.apply(lambda x: x['accessibility']*0.2 + x['competency']*0.4 + x['utilize']*0.4, axis=1)
+
+#print(df['utiliz'])
+
+df.to_csv('result.csv')
 # test
 # x = {}
 # x['Q1A1'] = 1
