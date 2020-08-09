@@ -30,7 +30,7 @@ def calculate_accessibility(x):
     if x['Q3'] == 1:
         q3 += 100
 
-    return q1_sum + q2_sum + q3
+    return (q1_sum + q2_sum + q3) / 3
 
 # 문1) Q1A1 1:있다 100 2:없다 0 / Q1A2 1:있다 100 2:없다 0 / Q1A1, Q1A2 1,1: 둘 다 있다 100
 # (컴퓨터 or 노트북 2중의 1개만 있음 100점)
