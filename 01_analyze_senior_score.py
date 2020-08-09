@@ -30,7 +30,7 @@ def calculate_accessibility(x):
     if x['Q3'] == 1:
         q3 += 100
 
-    return (q1_sum + q2_sum + q3) / 3
+    return round(((q1_sum + q2_sum + q3) / 3) *0.2)
 
 # 문1) Q1A1 1:있다 100 2:없다 0 / Q1A2 1:있다 100 2:없다 0 / Q1A1, Q1A2 1,1: 둘 다 있다 100
 # (컴퓨터 or 노트북 2중의 1개만 있음 100점)
@@ -40,13 +40,13 @@ def calculate_accessibility(x):
 # (스마트폰은 50점 피쳐폰은 10점, 스마트패드 20점, 스마트주변기기 20점 스마트폰 비중을 가장 높게 넣고 각 기기별 차등점수 부여)
 # 문3) Q3 1:이용할 수 있다 100 / 2:이용할 수 없으면 0
 # 만점 시 100+ 50 + 10 + 20 + 20 + 100 = 300점
-
+#접근,역량,보유 return값에 반올림 적용
 
 #역량
 def calculate_competency(x):
     q4_sum = sum([ x['Q4A{}'.format(i)] for i in range(1, 7 + 1)])
     q5_sum = sum([ x['Q5A{}'.format(i)] for i in range(1, 7 + 1)])
-    return 50 * q4_sum / 28 + 50 * q5_sum / 28
+    return round((50 * q4_sum / 28 + 50 * q5_sum / 28)*0.4)
 
 # 4번 항목&5번 항목만 우선 역량 점수에 넣고 실태보고서 퍼센티지 비교하여 6&7번 항목 계산하면서 오차줄이기 (4번 총합 50 5번 총합 50 비율로 총 100)
 # q4_sum = 7 : 28 = x : 50 (4번 항목이 7개 이므로 1개 항목당 4점 만점으로 7개 28점 만점이라고 보았을 때)
@@ -56,7 +56,7 @@ def calculate_competency(x):
 
 #활용
 #PC : A , Mo : B
-def calculate_utiliz(x):
+def calculate_utilize(x):
     #q8a~q14b까지 sums로 반복문 돌리기
     sums8 = [0] * 2
     sums9 = [0] * 2
@@ -117,7 +117,7 @@ def calculate_utiliz(x):
     10 / 28 * a + 10 / 28 * b
     10 / 28(a + b + c + d)
     '''
-    return total
+    return round(total*0.4)
 
 #활용 세부 점수 분류
 # 유선 및 모바일 인터넷 이용여부(0.4)
@@ -142,16 +142,16 @@ df.iloc[:, 31:80] = df.iloc[:, 31:81].fillna(0).astype(int)
 #각 데이터 프레임에 계산식을 한줄 씩 전부 적용 #axis 기본값 0-> row에 적용 1로 하면 colomn으로 적용
 df['competency'] = df.apply(lambda x: calculate_competency(x), axis=1)
 df['accessibility'] = df.apply(lambda x: calculate_accessibility(x), axis=1)
-df['utiliz'] = df.apply(lambda x: calculate_utiliz(x), axis=1)
+df['utilize'] = df.apply(lambda x: calculate_utilize(x), axis=1)
 
 #각 100점씩 총 300점 환산하였음 총 점수
 #접근 *0.2 = 20, 역량 *0.4 = 40, 활용 *0.4 = 40
 #총 더하기 100
-df['digital_sum'] = df.apply(lambda x: x['accessibility']*0.2 + x['competency']*0.4 + x['utilize']*0.4, axis=1)
+df['digital_sum'] = df.apply(lambda x: x['accessibility'] + x['competency'] + x['utilize'], axis=1)
 
-#print(df['utiliz'])
+#print(df['utilize'])
 
-df.to_csv('result.csv')
+df.to_csv('result_senior.csv')
 # test
 # x = {}
 # x['Q1A1'] = 1
